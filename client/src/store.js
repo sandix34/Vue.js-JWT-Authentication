@@ -42,7 +42,7 @@ const user = {
       }
 
     },
-    async fetchCurrentUser(context, user) {
+    async fetchCurrentUser(context) {
       try {
         context.commit('updateIsLoading', true);
         const user = await axios.get("/api/user/current");
@@ -56,14 +56,13 @@ const user = {
     updateIsLoading(state, isLoading) {
       state.isLoading = isLoading;
     },
-    signupSucces(state, data) {
+    signupSucces(state) {
       state.isLoading = false;
       state.errors = null;
     },
     signError(state, errors) {
       console.log(errors);
       state.errors = errors.response.data;
-      
     },
     signinSucces(state, data) {
       state.isLoading = false;
@@ -75,7 +74,7 @@ const user = {
     signOut(state) {
       state.jwtToken = null;
     },
-    fetchCurrentUserSuccess(state, user) {
+    fetchCurrentUserSuccess(state) {
       state.data = user;
       state.isLoading = false;
       state.errors = null;
@@ -84,7 +83,9 @@ const user = {
 }
 
 const store = new Vuex.Store({
-  user
+  modules: {
+    user
+  }
 });
 
 export default store;

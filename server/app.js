@@ -2,6 +2,7 @@
 var express = require("express");
 // manage file and folder paths in the server file system
 var path = require("path");
+const index = require("./routes");
 
 const mongoose = require("mongoose");
 const dotenv = require ('dotenv'); 
@@ -31,6 +32,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 // middleware to serve the static files of the Vue application
 app.use(express.static(path.join(__dirname, "../client-build")));
+
+app.use(index);
 
 // all GET requests return the Vue application's index.html
 app.get("*", (req, res) => {
