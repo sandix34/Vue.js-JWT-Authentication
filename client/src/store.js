@@ -21,15 +21,70 @@ const user = {
     jwtToken: state => state.jwtToken
   },
   actions: {
-    trySignin(context, credentials) {},
-    trySignup(context, user) {},
-    fetchCurrentUser(context, user) {}
+    async trySignin(context, credentials) {
+      try {
+        context.commit('updateIsLoading', true);
+        const data = await axios.post("/api/auth", credentials);
+        context.commit('signinSucces', data);
+        router.push('profile');
+      } catch(err) {
+        context.commit("signError", err)
+      }
+    },
+    async trySignup(context, user) {
+      try {
+        context.commit('updateIsLoading', true);
+        await axios.post("/api/user", user);
+        context.commit("signupSucces");
+        router.push("/signin");
+      } catch(err) {
+        context.commit("signError", err)
+      }
+
+    },
+    async fetchCurrentUser(context, user) {
+      try {
+        context.commit('updateIsLoading', true);
+        const user = await axios.get("/api/user/current");
+        context.commit('fetchCurrentUserSuccess', user);
+      } catch(err) {
+        context.commit("signError", err)
+      }
+    } 
   },
   mutations: {
-    signinSucces(state, data) {},
-    signupSucces(state, data) {},
-    signOut(state) {},
-    signError(state, errors) {}
+    updateIsLoading(state, isLoading) {
+      state.isLoading = isLoading;
+    },
+    signupSucces(state, data) {
+      state.isLoading = false;
+      state.errors = null;
+    },
+    signError(state, errors) {
+      console.log(errors);
+      state.errors = errors.response.data;
+      
+    },
+    signinSucces(state, data) {
+      state.isLoading = false;
+      state.errors = null;
+      state.isLoggedIn = true;
+      state.data = data.user;
+      state.jwtToken = data.jwtToken;
+    },
+    signOut(state) {
+      state.jwtToken = null;
+    },
+    fetchCurrentUserSuccess(state, user) {
+      state.data = user;
+      state.isLoading = false;
+      state.errors = null;
+    }
   }
 }
 
+const store = new Vuex.Store({
+  user
+});
+
+export default store;

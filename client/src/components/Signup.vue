@@ -40,6 +40,7 @@ export default {
     trySubmit(e) {
       e.preventDefault();     
       if (this.isValid()) {
+        this.$store.dispatch('user/trySignup', this.form);
       console.log(this.form);
       }
     },
