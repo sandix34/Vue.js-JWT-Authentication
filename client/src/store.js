@@ -15,6 +15,7 @@ const user = {
     errors: []
   },
   getters: {
+    isLoading: state => state.isLoading,
     isLoggedIn: state => state.isLoggedIn,
     errors: state => state.errors,
     currentUser: state => state.data,
@@ -63,6 +64,7 @@ const user = {
     signError(state, errors) {
       console.log(errors);
       state.errors = errors.response.data;
+      state.isLoading = false;
     },
     signinSucces(state, data) {
       state.isLoading = false;

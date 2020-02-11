@@ -5,6 +5,9 @@ const bcrypt = require("bcrypt");
 router.post('/', async (req, res) => {
   const body = req.body;
   try {
+    if (!body.username || !body.username.lenght === 0) {
+      res.status(400).json(["username missing"]);
+    }
     await new User({
       email: body.email,
       username: body.username,
