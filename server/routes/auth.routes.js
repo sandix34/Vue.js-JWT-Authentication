@@ -8,6 +8,7 @@ router.post('/', async (req, res, next) => {
   const body = req.body;
   try {
     const user = await User.findOne({email: body.email}).exec();
+    
     if (!user) {
       return res.status(400).json(['user doesn\'t exist']);
     }
@@ -16,7 +17,7 @@ router.post('/', async (req, res, next) => {
       return res.status(400).json(['password doesn\'t match']);
     }
     const jwtToken = jsonwebtoken.sign({
-      sub: user._id.toString
+      sub: user._id
     }, JWT_SECRET, {
       algorithm: 'HS256'
     });
@@ -25,7 +26,7 @@ router.post('/', async (req, res, next) => {
     }
     res.status(200).json({
       user, // = user: user
-      jwtToken // = token: token
+      jwtToken // = jwtToken: jwtToken
     })
   } catch(e) {
     next(e);

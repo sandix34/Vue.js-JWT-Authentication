@@ -1,6 +1,16 @@
 const router = require("express").Router();
 const User = require("../models/user.model");
 const bcrypt = require("bcrypt");
+const isLoggedIn = require('../middleware/isLoggedIn')
+
+router.get('/current', isLoggedIn, (req, res) => {
+  // console.log(req.user);
+  if (req.user) {
+    res.json(req.user);
+  } else {
+    res.end();
+  }
+})
 
 router.post('/', async (req, res, next) => {
   const body = req.body;
