@@ -8,19 +8,34 @@ import store from './store';
 
 Vue.use(VueRouter);
 
+const isLoggedIn = (to, from, next) => {
+  if (store.getters["user/isLoggedIn"]) {
+    next();
+  } else if (store.getters["user/isLoggedIn"] === null) {
+    const unsubscribe = store.subscribe(mutation => {
+      if (mutation.type === "user/refreshTokenSuccess") {
+        next();
+      } else if (mutation.type === "user/refreshTokenError") {
+        router.push("/signin");
+      }
+      unsubscribe();
+    });
+  } else {
+    router.push("/signin");
+  }
+};
+
 const router = new VueRouter({
   mode: "history",
   routes: [
     { path: '/', component: Home },
     { path: '/signin', component: Signin },
     { path: '/signup', component: Signup },
-    { path: '/profile', beforeEnter(to, from, next) {
-      if (store.getters['user/isLoggedIn']) {
-        next();
-      } else {
-        router.push('/signin');
-      }
-    } , component: Profile }
+    {
+      path: "/profile",
+      beforeEnter: isLoggedIn,
+      component: Profile
+    } 
   ]
 });
 

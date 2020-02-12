@@ -50,6 +50,17 @@ const user = {
       } catch (err) {
         context.commit("signError", err);
       }
+    },
+    async refreshToken(context) {
+      try {
+        const response = await axios.get("/api/auth/refresh-token");
+        setTimeout(() => {
+          context.dispatch("refreshToken");
+        }, 14 * 60 * 1000);
+        context.commit("refreshTokenSuccess", response.data);
+      } catch (err) {
+        context.commit("refreshTokenError");
+      }
     }
   },
   mutations: {
@@ -84,6 +95,18 @@ const user = {
       state.isLoading = false;
       state.isLoggedIn = true;
       state.errors = [];
+    },
+    refreshTokenSuccess(state, data) {
+      state.data = data.user;
+      state.isLoggedIn = true;
+      state.jwtToken = data.jwtToken;
+      localStorage.setItem("jwtToken", data.jwtToken);
+    },
+    refreshTokenError(state) {
+      state.data = null;
+      state.isLoggedIn = false;
+      state.jwtToken = null;
+      localStorage.removeItem("jwtToken");
     }
   }
 };

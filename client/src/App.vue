@@ -21,7 +21,7 @@ export default {
   },
   beforeMount() {
     if (this.jwtToken) {
-      this.$store.dispatch('user/fetchCurrentUser');
+      this.$store.dispatch('user/refreshToken');
     }
   }
 }
