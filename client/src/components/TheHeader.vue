@@ -2,20 +2,28 @@
   <div class="container-header d-flex w-100 flex-row justify-content-center align-items-center p-3">
     <router-link to="/">Vue-JWT</router-link>
     <div class="flex-fill"></div>
-    <div class="d-flex flex-row">
+    <div v-if="!jwtToken && isLoggedIn === false" class="d-flex flex-row">
       <router-link to="signin" class="mr-2">Connexion</router-link>
       <router-link to="signup">Inscription</router-link>
     </div>
+    <div style="cursor:pointer;" v-if="isLoggedIn" @click="signout">Deconnexion</div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'Header',
-  components: {
-    
-  }
+  computed: {
+    ...mapGetters('user', ['isLoggedIn', 'jwtToken'])
+  },
+  methods: {
+    signout() {
+      this.$store.commit('user/signOut');
+      this.$router.push('/');
+    }
+  },
 }
 </script>
 

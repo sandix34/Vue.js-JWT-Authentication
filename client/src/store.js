@@ -75,6 +75,9 @@ const user = {
     },
     signOut(state) {
       state.jwtToken = null;
+      state.data = null;
+      state.isLoggedIn = false;
+      localStorage.removeItem('jwtToken');
     },
     fetchCurrentUserSuccess(state, user) {
       state.data = user;
