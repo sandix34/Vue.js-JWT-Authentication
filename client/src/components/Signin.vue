@@ -4,46 +4,45 @@
     <form @submit="trySubmit" class="text-left">
       <div class="form-group">
         <label>Email</label>
-        <input class="form-control" v-model="form.email" type="email">
+        <input class="form-control" v-model="form.email" type="email" />
       </div>
       <div class="form-group">
         <label>Password</label>
-        <input class="form-control" v-model="form.password" type="password">
+        <input class="form-control" v-model="form.password" type="password" />
       </div>
-      <ul v-if="errors.length">
+      <ul v-if="errors">
         <li class="text-danger" v-for="error in errors" :key="error">{{ error }}</li>
       </ul>
-      <button class="btn btn-primary">Connexion</button>
+      <button class="btn btn-primary" :class="{ 'disabled': isLoading }">connexion</button>
     </form>
   </div>
 </template>
 
 <script>
-
+import { mapGetters } from "vuex";
 export default {
-  name: 'Signin',
-  data () {
+  name: "Signin",
+  data() {
     return {
-      errors: [],
       form: {
-        email: '',
-        password: ''
+        email: "",
+        password: ""
       }
-    }
+    };
+  },
+  computed: {
+    ...mapGetters("user", ["isLoading", "errors"])
   },
   methods: {
     trySubmit(e) {
-      e.preventDefault();     
-      if (this.isValid()) {
-      console.log(this.form);
+      e.preventDefault();
+      if (!this.isLoading) {
+        this.$store.dispatch("user/trySignin", this.form);
       }
-    },
-    isValid() {
-      return true;
     }
-  },
-}
+  }
+};
 </script>
 
-<style>
+<style scoped>
 </style>

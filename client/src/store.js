@@ -25,8 +25,8 @@ const user = {
     async trySignin(context, credentials) {
       try {
         context.commit('updateIsLoading', true);
-        const data = await axios.post("/api/auth", credentials);
-        context.commit('signinSucces', data);
+        const response = await axios.post("/api/auth", credentials);
+        context.commit('signinSucces', response.data);
         router.push('profile');
       } catch(err) {
         context.commit("signError", err)
@@ -70,6 +70,7 @@ const user = {
       state.isLoading = false;
       state.errors = null;
       state.isLoggedIn = true;
+      delete data.user.password;
       state.data = data.user;
       state.jwtToken = data.jwtToken;
     },
